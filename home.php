@@ -6,6 +6,6 @@
     <title>Home</title>
   </head>
   <body>
-    this is home page
+    <marquee><h1>Welcome to Personal Finance Management</h1></marquee>
   </body>
 </html>
