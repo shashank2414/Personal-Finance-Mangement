@@ -14,6 +14,26 @@ body {
   background-position: center;
   background-size: auto;
 }
+/* ========Session Msg Pop Up box======= */
+#msgBox {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+#msgBox.error {
+  background-color: #f44336; /* Red for error messages */
+}
+
+#msgBox.success {
+  background-color: #4CAF50; /* Green for success messages */
+}
 
 .container {
   position: relative;
@@ -186,7 +206,7 @@ a {
   width: 100%;
   font-size: 2.2rem;
   line-height: 1.2;
-  padding: 2rem 0;
+  padding: 1rem 0;
 }
 .panel h3 {
   font-size: 24px;

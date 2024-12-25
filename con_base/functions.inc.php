@@ -735,6 +735,13 @@ function randomString($length = 8)
   }
   return $str;
 }  
+
+function sanitizeInput($data) {
+    $data = trim($data); // Remove unnecessary spaces
+    $data = stripslashes($data); // Remove backslashes
+    $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8'); // Convert special characters to HTML entities
+    return $data;
+}
    
         
 ?>

@@ -5,12 +5,12 @@ global  $DB_LINK, $PDO_LINK;
 const LOCAL_HOST = 'localhost';
 const REMOTE_USERNAME = 'root';
 const REMOTE_PASSWORD = '';
-const DATABASE = 'u144885197_jhd';
+const DATABASE = 'finance_advisor';
 
 //const REMOTE_USERNAME = 'root';
 //const REMOTE_PASSWORD = '';
 
- 
+
 
 // Database credentials
 $host = "localhost";

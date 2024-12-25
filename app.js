@@ -15,3 +15,14 @@ sign_up_btn2.addEventListener("click", () => {
 sign_in_btn2.addEventListener("click", () => {
   container.classList.remove("sign-up-mode2");
 });
+
+        // Display session pop-up message for 2 seconds
+        window.onload = function() {
+            const msgBox = document.getElementById('msgBox');
+            if (msgBox) {
+                setTimeout(() => {
+                    msgBox.style.display = 'none';
+                }, 2000); 
+            }
+        };
+    
