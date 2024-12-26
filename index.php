@@ -85,16 +85,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <div class="container">
     <div class="signin-signup">
       <!-- ========= First Interface Sign in========== -->
-      <form action="" method="post" class="sign-in-form">
+      <form action="" method="post" class="sign-in-form" autocomplete="off">
         <h2 class="title">Sign in</h2>
         <div class="input-field">
           <i class="fas fa-user"></i>
-          <input type="number" placeholder="Mobile" required />
+          <input type="number" autocomplete="false"  placeholder="Mobile" required />
         </div>
         <div class="input-field">
           <i class="fas fa-lock"></i>
           <!-- <input type="password" placeholder="Password" /> -->
-          <input type="password" placeholder="Password" required />
+          <input type="password"     autocomplete="new-password" placeholder="Password" required />
         </div>
         <small><a href="">Forgot Password ?</a></small>
 

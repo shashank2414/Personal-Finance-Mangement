@@ -1,15 +1,14 @@
 <?php
 session_start();
+	date_default_timezone_set("Asia/Kolkata");
 include("db.config.inc.php");
-date_default_timezone_set("Asia/Kolkata");
+
 //header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
 //header("Cache-Control: no-store, must-revalidate");
 //header("Pragma: no-cache");
+ //// each client should remember their session id for EXACTLY 1 hour
  
-//// each client should remember their session id for EXACTLY 1 hour
-
- 
-$qry_global=mysqli_query($DB_LINK,"select * from tbl_setting")or die(mysqli_error($DB_LINK));
+$qry_global=mysqli_query($DB_LINK,"select * from  tab_firm")or die(mysqli_error($DB_LINK));
 $global_fetch=mysqli_fetch_array($qry_global);
 $SITE_NAME= stripslashes($global_fetch['site_name']);
 $SITE_URL= stripslashes($global_fetch['site_url']);
@@ -40,29 +39,6 @@ $ADMIN_HTML_TITLE=stripslashes($global_fetch['site_admin_title']);
 
 //$LAST_BINARY_ID=stripslashes($global_fetch['binary_last_ac']);
 
-function  update_bin_id($m_id)
-{
-	global $DB_LINK;
-
-	$qry=mysqli_query($DB_LINK,"update tbl_setting set binary_last_ac='$m_id' ");
-}
-
-function  update_bin_id_pre($m_id)
-{
-	global $DB_LINK;
-
-	$qry=mysqli_query($DB_LINK,"update tbl_setting set binary_last_ac_pre='$m_id' ");
-}
-
-
-
-function  update_bin_id_mem_table($m_id)
-{
- global $DB_LINK;
- $qry=mysqli_query($DB_LINK,"update tbl_staff_profile set is_binary_calc='1' where id='$m_id' ");  
-}
-
-
 // function for admin login validation
 function validate()
 {
@@ -75,7 +51,6 @@ function validate()
 		exit();
 	}
 }
-
 
 function master_main()
 {
@@ -107,8 +82,6 @@ function logout_time()
     echo date('h:i:s', $endTime);
 }
 
-//$_SESSION['CREATED'] = time();  // update creation time
-
 function master_developer()
 {
   if("amritforu8896935191"!=$_SESSION['session_master'])
@@ -118,7 +91,6 @@ function master_developer()
     exit;
   }
 }
-
 
 // function for user login validation
 function validate_user()
@@ -133,6 +105,7 @@ function validate_user()
 		exit();
 	}
 }
+
 function master_user()
 {
 	if(!isset($_SESSION['session_user']))
@@ -141,76 +114,7 @@ function master_user()
 		exit();
 	}
 }
-// function for staff login validation
-function validate_staff()
-{
-	if (time() - $_SESSION['CREATED_STAFF'] > 1800) 
-  	{
-  		// session started more than 30 minutes ago
-    	//session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
-    	//$_SESSION['CREATED'] = time();  // update creation time
-		session_destroy(); 
-		header("location:../login.html");
-		exit();
-	}
-}
-function master_staff()
-{
-	if(!isset($_SESSION['session_staff']))
-	{
-		//header("location:sign-in");
-		//exit();
-		header("location:../login.html");
-		exit();
-	}
-}
-// function for user login validation
-function validate_branch()
-{
-	if (time() - $_SESSION['CREATED_BRANCH'] > 1800) 
-  	{
-  		// session started more than 30 minutes ago
-    	//session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
-    	//$_SESSION['CREATED'] = time();  // update creation time
-		session_destroy(); 
-		header("location:sign-in");
-		exit();
-	}
-}
-function master_branch()
-{
-	if(!isset($_SESSION['session_branch']))
-	{
-		header("location:sign-in");
-		exit();
-	}
-}
-function master_member()
-{
-if(!isset($_SESSION['session_user'])) {  header("location:../");  exit(); }
-}
-function master_recruiters()
-{
- if(!isset($_SESSION['session_recruiters'])) { header("location:sign-in");  exit(); }
-}
-function update_kyc()
-{
-	if($_SESSION['user_uid']=='')
-	{
-		$_SESSION[ 'warn_msg' ] = "Kindly complete the profile";
-		header("Location: ../profile_edit");
-		exit;
-	}
-}
-function update_bank()
-{
-	if($_SESSION['user_bank']=='')
-	{
-		$_SESSION['warn_msg'] = "Kindly complete the Bank Details";
-		header("Location: ../bank_details_edit");
-		exit;
-	}
-}
+
 //SEO URL Friendly
 function clean($string) 
 {
@@ -226,23 +130,7 @@ function clean_witout_underscore($string)
     $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
     return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
 }
-// function for filter the string
-function normal_filter($val)
-{
-	return ucfirst(stripslashes($val));
-}
-function strip_filter($val, $size)
-{
-	return substr(stripslashes(strip_tags($val)),0,$size);
-}
-function caps_filter($val)
-{
-	return strtoupper(stripslashes($val));
-}
-function normalall_filter($val)
-{
-	return ucwords(stripslashes($val));
-}
+
 function date_dmy($date)
 {
 	if($date!='' || $date!='0000-00-00 00:00:00')
@@ -258,6 +146,7 @@ function date_time_only($date)
         return date("h:i:s A", strtotime($date));
     }
 }
+
 function date_dmy_small($date)
 {
   	if($date!='' && $date!='0000-00-00')
@@ -265,6 +154,7 @@ function date_dmy_small($date)
   		 return date("j M Y", strtotime($date));
   	}
 }
+
 // function to access description form content table
 function enc($val)
 {
@@ -274,6 +164,7 @@ function enc($val)
 		return $new_val;
 	}
 }
+
 function dec($val)
 {
 	if($val!='')
@@ -282,30 +173,7 @@ function dec($val)
 		return $org_val;
 	}
 }
-function enc_normal($val)
-{
-	if($val!='')
-	{
-		$new_val=base64_encode(base64_encode($val));
-		return $new_val;
-	}
-}
-function dec_normal($val)
-{
-	if($val!='')
-	{
-		$org_val=base64_decode(base64_decode($val));
-		return $org_val;
-	}
-}
- 
-function show_content($id,$row_name,$DB_LINK)
-{
-	$grs=mysqli_query($DB_LINK,"select $row_name from tbl_category where id='$id'");
-	$row=mysqli_fetch_array($grs);
-	return $row[$row_name];
-}
- 
+
 function data_cutter($data,$cut)
 {
 	if(strlen(stripslashes($data))>$cut)
@@ -318,6 +186,7 @@ function data_cutter($data,$cut)
 	}
 	return $cutdata;
 }
+
 function data_cutter_clean($data,$cut)
 {
 	if(strlen(stripslashes($data))>$cut)
@@ -330,6 +199,7 @@ function data_cutter_clean($data,$cut)
 	}
 	return $cutdata;
 }
+
 function date_dm($date)
 {
   	if($date!='' && $date!='0000-00-00 00:00:00' && $date!='0000-00-00')
@@ -337,31 +207,15 @@ function date_dm($date)
 		return date("j M Y",strtotime($date));
   	}
 }
+
 function curPageName() 
 {
 	return substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1);
 }
+
 $currentPG=curPageName(); 
 //session_destroy();
-function get_client_ip() 
-{
-    $ipaddress = '';
-    if (getenv('HTTP_CLIENT_IP'))
-        $ipaddress = getenv('HTTP_CLIENT_IP');
-    else if(getenv('HTTP_X_FORWARDED_FOR'))
-        $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
-    else if(getenv('HTTP_X_FORWARDED'))
-        $ipaddress = getenv('HTTP_X_FORWARDED');
-    else if(getenv('HTTP_FORWARDED_FOR'))
-        $ipaddress = getenv('HTTP_FORWARDED_FOR');
-    else if(getenv('HTTP_FORWARDED'))
-       $ipaddress = getenv('HTTP_FORWARDED');
-    else if(getenv('REMOTE_ADDR'))
-        $ipaddress = getenv('REMOTE_ADDR');
-    else
-        $ipaddress = 'UNKNOWN';
-    return $ipaddress;
-}
+
 function get_ip() 
 {
 	//Just get the headers if we can or else use the SERVER global
@@ -388,27 +242,7 @@ function get_ip()
 	}
 	return $the_ip;
 }
-	
-function ip_store($log_type,$log_id)
-{ 
-  	global $DB_LINK;
-	$ip=get_ip();
-	/*$qry_ip=mysqli_query($DB_LINK,"select * from log_data where ip='$ip'");
-	$count_ip=mysqli_num_rows($qry_ip);
-	if($count_ip>0)
-	{
-    	$global_ip=mysqli_fetch_array($qry_ip);
-		$ip_open=$global_ip['count']+1;
-   		mysqli_query($DB_LINK,"update log_data set count='$ip_open',dt='".date("Y-m-d")."' where ip='$ip'");
-	}
-	else
-	{}*/
- // echo "insert into log_data set  ip='$ip',log_typ='$log_type',log_id='$log_id' "; exit;
-	mysqli_query($DB_LINK, "insert into log_data set ip='$ip', log_typ='$log_type', log_id='$log_id'");
-	
-}
-	
- 
+
 //Date ago time*/
 function timeAgo($time_ago)
 {
@@ -496,6 +330,7 @@ function yearCalculator($dt, $y){
         return 0;
     }
 }
+
 function simpleInterest($p, $r, $t){
 	
 	$si = ($p*$r*$t)/100;
@@ -505,20 +340,19 @@ function simpleInterest($p, $r, $t){
 	return $amt;
 }
  
- 
 function insert_ledger($to, $from, $typ, $amt, $prt, $ttyp, $description='', $byledger)
 {
 	global $DB_LINK;
 	$ins="INSERT INTO `tbl_leg_add` set `to_mem`='".$to."', `from_mem`='".$from."', `typ` ='$typ', `amt`='".$amt."', `dt`='".date("Y-m-d")."', `part`='$prt', ttyp='$ttyp', txnid='".time().rand(100,999)."', description='$description', byledger='$byledger'";
 	mysqli_query($DB_LINK,$ins);
 }
+
 function insert_ledger_rec($to, $typ, $amt, $prt, $ttyp)
 {
 	global $DB_LINK;
 	$ins="INSERT INTO `tbl_leg_rec` set `member`='".$to."', `typ` ='$typ', `amt`='".$amt."', `dt`='".date("Y-m-d")."', `part`='$prt', ttyp='$ttyp', txnid='".time().rand(100,999)."'";
 	mysqli_query($DB_LINK,$ins);
 }
- 
 
 function sentwp_sms($mobile,$msg,$Id=0)
 {
@@ -527,14 +361,12 @@ function sentwp_sms($mobile,$msg,$Id=0)
 	// $msg = str_replace(' ', '%20', $msg);
 	//$msg=urlencode($msg);
 	
-	
 	$sql_log_typ_firm = " select * from firm  where id='25' ";
 	$firm_data = mysqli_fetch_assoc(mysqli_query($DB_LINK, $sql_log_typ_firm));
 	$wp_username = $firm_data['wp_username'];
 	$wp_password = $firm_data['wp_password'];
 	$wp_api_token = $firm_data['wp_api_token'];
 	$REGARDS = $firm_data['name'];
-	
 	
 	$curl = curl_init();
 	curl_setopt_array($curl, array(
@@ -564,7 +396,6 @@ function sentwp_sms($mobile,$msg,$Id=0)
 		
 		 
 }
- 
 
 function wp_sms_store($msg,$contact,$status,$sentdate,$Id,$response)
 {
@@ -677,10 +508,7 @@ function wp_sms_balance()
 
 
 }
- 
- 
 
- 
 function alert_msg($type, $module)
 {
     switch($type)
@@ -696,8 +524,7 @@ function alert_msg($type, $module)
     }
     $result = array($toastr, $sweetalert);
     return $result;
-}
-function logEvent($msg, $message) 
+}function logEvent($msg, $message)
 {
 	global $DB_LINK;
     if ($message != '') 
@@ -741,7 +568,4 @@ function sanitizeInput($data) {
     $data = stripslashes($data); // Remove backslashes
     $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8'); // Convert special characters to HTML entities
     return $data;
-}
-   
-        
-?>
+}    ?>
