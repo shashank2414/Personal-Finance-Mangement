@@ -163,8 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               "
             alt="" />
           <h1>
-            Welcome to Personal <br />
-            Finance Management
+            Welcome to Personal <br /> Finance Management
           </h1>
 
           <button class="btn" id="sign-in-btn">Sign in</button>

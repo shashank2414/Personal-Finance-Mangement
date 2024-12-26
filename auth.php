@@ -1,8 +1,5 @@
 <?php 
- if(isset($_POST['otp-submit'])){
-    header('Location: index.php');
-    exit;
- }
+ require('con_base/functions.inc.php');
 ?>
 
 <!DOCTYPE html>
@@ -24,6 +21,16 @@
     
   </head>
   <body>
+
+  <?php
+  // ========Session Msg===========
+  if (isset($_SESSION['msg'])): ?>
+    <div id="msgBox" class="<?php echo $_SESSION['msg_type']; ?>">
+      <?php echo $_SESSION['msg'];
+      unset($_SESSION['msg'], $_SESSION['msg_type']); ?>
+    </div>
+  <?php endif;
+  ?>
     
   
     <form action="" method="post">
@@ -43,7 +50,10 @@
     </form>
    
 
-    <script>
+  
+    <script src="app.js"></script>
+
+      <script>
         document.addEventListener('DOMContentLoaded', () => {
     const inputs = document.querySelectorAll('.otp-input input');
 

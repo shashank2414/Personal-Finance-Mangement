@@ -10,7 +10,7 @@
     display: none;
   }
   form {
-    width: 80%;
+    width: 98%;
   }
   form.sign-up-form {
     display: none;
@@ -43,11 +43,11 @@
 /* ======Auth page====== */
 @media (max-width: 400px) {
   .otp-container {
-    width: 90%;
+    width: 100%;
     height: auto;
   }
   .otp-input input {
-    width: 35px;
+    width: 42px;
     height: 42px;
     font-size: 1em;
   }
