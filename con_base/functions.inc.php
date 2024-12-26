@@ -408,7 +408,7 @@ function ip_store($log_type,$log_id)
 	
 }
 	
- s
+ 
 //Date ago time*/
 function timeAgo($time_ago)
 {

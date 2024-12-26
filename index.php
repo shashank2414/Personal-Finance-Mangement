@@ -1,5 +1,5 @@
 <?php
-require('con_base/db.config.inc.php');
+ 
 require('con_base/functions.inc.php');
 
 // ========For Sign Up==========
