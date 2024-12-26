@@ -1,6 +1,7 @@
 <?php
- 
-require('con_base/functions.inc.php');
+	
+	global $PDO_LINK;
+	require('con_base/functions.inc.php');
 
 // ========For Sign Up==========
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -9,24 +10,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = sanitizeInput($_POST['username']);
     $phone = sanitizeInput($_POST['phone']);
     $pass = sanitizeInput($_POST['password']);
+				$otp=rand(100000,999999);
 
     try {
-      $sql = "INSERT INTO tab_login (username, mobile, pass) VALUES (:username, :phone, :pass)";
-
-      $stmt = $PDO_LINK->prepare($sql);
-
-      $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-      $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
-      $stmt->bindParam(':pass', $pass, PDO::PARAM_STR);
-
-      if ($stmt->execute()) {
-        $_SESSION['msg'] = "Otp sent to your mobile";
-        header('Location: auth.php');
-        exit;
-      } else {
-        $_SESSION['msg'] = "Failed to submit data.";
-        $_SESSION['msg_type'] = "error";
-      }
+	    
+	    $sql1= "INSERT INTO tab_user (name, mobile) VALUES (:name, :mobile)";
+	    $stmt1 = $PDO_LINK->prepare($sql1);
+	    $stmt1->bindParam(':name', $username, PDO::PARAM_STR);
+	    $stmt1->bindParam(':mobile', $phone, PDO::PARAM_STR);
+	    if ($stmt1->execute()) {
+		    
+		    $sql = "INSERT INTO tab_login (user, username, mobile, pass,otp) VALUES (:user,:username, :phone, :pass,:otp)";
+		    $stmt = $PDO_LINK->prepare($sql);
+		    $stmt->bindParam(':user', $phone, PDO::PARAM_STR);
+		    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+		    $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
+		    $stmt->bindParam(':pass', $pass, PDO::PARAM_STR);
+		    $stmt->bindParam(':otp', $otp, PDO::PARAM_STR);
+		    
+		    if ($stmt->execute()) {
+			    $_SESSION['msg'] = "Otp sent to your mobile";
+			    header('Location: auth.php');
+			    exit;
+		    } else {
+			    $_SESSION['msg'] = "Failed to submit data.";
+			    $_SESSION['msg_type'] = "error";
+		    }
+	    }
+	    else {
+		    $_SESSION['msg'] = "Failed to submit data.";
+		    $_SESSION['msg_type'] = "error";
+	    }
+					
     } catch (PDOException $e) {
       $_SESSION['msg'] = "Error: " . $e->getMessage();
       $_SESSION['msg_type'] = "error";
