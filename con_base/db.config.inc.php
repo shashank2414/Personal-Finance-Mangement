@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+//error_reporting(0);
 // Globals
 global  $DB_LINK, $PDO_LINK;
 const LOCAL_HOST = 'localhost';

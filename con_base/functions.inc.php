@@ -1,79 +1,75 @@
 <?php
 session_start();
-	date_default_timezone_set("Asia/Kolkata");
+date_default_timezone_set("Asia/Kolkata");
 include("db.config.inc.php");
 
 //header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
 //header("Cache-Control: no-store, must-revalidate");
 //header("Pragma: no-cache");
- //// each client should remember their session id for EXACTLY 1 hour
- 
-$qry_global=mysqli_query($DB_LINK,"select * from  tab_firm")or die(mysqli_error($DB_LINK));
-$global_fetch=mysqli_fetch_array($qry_global);
-$SITE_NAME= stripslashes($global_fetch['site_name']);
-$SITE_URL= stripslashes($global_fetch['site_url']);
-$EMAIL_ID=stripslashes($global_fetch['email']); 
-$EMAIL_ID_2=stripslashes($global_fetch['email2']);
-$MOBILE=stripslashes($global_fetch['mobile']);
-$MOBILE2=stripslashes($global_fetch['mobile2']); 
-$fax=stripslashes($global_fetch['fax']);
-$ADDRESS=stripslashes($global_fetch['address']);
-$MAP=stripslashes($global_fetch['google_map']);
-$F=stripslashes($global_fetch['f']);
-$L=stripslashes($global_fetch['l']);
-$T=stripslashes($global_fetch['t']);
-$Y=stripslashes($global_fetch['y']);
-$W=stripslashes($global_fetch['g']);
-$WEBMAIL=stripslashes($global_fetch['webmail']);
-$MPASS=stripslashes($global_fetch['mpass']);
-$HOST=stripslashes($global_fetch['host']);
-$PORT=stripslashes($global_fetch['port']);
-$IS_MENU=stripslashes($global_fetch['is_menu']);
-$msg_contact=stripslashes($global_fetch['msg_contact']);
-$msg_pass=stripslashes($global_fetch['msg_pass']);
-$msg_sender_id=stripslashes($global_fetch['msg_sender_id']);
-$msg_type=stripslashes($global_fetch['msg_typ']);
-$SESSION_MIN = 10;
-$current_year = date('Y'); 
-$ADMIN_HTML_TITLE=stripslashes($global_fetch['site_admin_title']);
+//// each client should remember their session id for EXACTLY 1 hour
+
+$qry_global = mysqli_query($DB_LINK, "select * from  tab_firm") or die(mysqli_error($DB_LINK));
+$global_fetch = mysqli_fetch_array($qry_global);
+//$SITE_NAME = stripslashes($global_fetch['site_name']);
+//$SITE_URL = stripslashes($global_fetch['site_url']);
+// $EMAIL_ID = stripslashes($global_fetch['email']);
+// $EMAIL_ID_2 = stripslashes($global_fetch['email2']);
+// $MOBILE = stripslashes($global_fetch['mobile']);
+// $MOBILE2 = stripslashes($global_fetch['mobile2']);
+// $fax = stripslashes($global_fetch['fax']);
+// $ADDRESS = stripslashes($global_fetch['address']);
+// $MAP = stripslashes($global_fetch['google_map']);
+// $F = stripslashes($global_fetch['f']);
+// $L = stripslashes($global_fetch['l']);
+// $T = stripslashes($global_fetch['t']);
+// $Y = stripslashes($global_fetch['y']);
+// $W = stripslashes($global_fetch['g']);
+// $WEBMAIL = stripslashes($global_fetch['webmail']);
+// $MPASS = stripslashes($global_fetch['mpass']);
+// $HOST = stripslashes($global_fetch['host']);
+// $PORT = stripslashes($global_fetch['port']);
+// $IS_MENU = stripslashes($global_fetch['is_menu']);
+// $msg_contact = stripslashes($global_fetch['msg_contact']);
+// $msg_pass = stripslashes($global_fetch['msg_pass']);
+// $msg_sender_id = stripslashes($global_fetch['msg_sender_id']);
+// $msg_type = stripslashes($global_fetch['msg_typ']);
+// $SESSION_MIN = 10;
+// $current_year = date('Y');
+// $ADMIN_HTML_TITLE = stripslashes($global_fetch['site_admin_title']);
 
 //$LAST_BINARY_ID=stripslashes($global_fetch['binary_last_ac']);
 
 // function for admin login validation
 function validate()
 {
-	if (time() - $_SESSION['CREATED'] > 1800) 
-    {
-   		// session started more than 30 minutes ago
-    	//session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
-    	//$_SESSION['CREATED'] = time();  // update creation time
-		header("location:sign-in");
-		exit();
-	}
+    if (time() - $_SESSION['CREATED'] > 1800) {
+        // session started more than 30 minutes ago
+        //session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
+        //$_SESSION['CREATED'] = time();  // update creation time
+        header("location:sign-in");
+        exit();
+    }
 }
 
 function master_main()
 {
-	if(!isset($_SESSION['session_master']))
-	{
+    if (!isset($_SESSION['session_master'])) {
         session_destroy();
         header("location:sign-in");
-		exit();
-	}
+        exit();
+    }
     if (time() - $_SESSION['CREATED'] > 30) {
         session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
         $_SESSION['CREATED'] = time();  // update creation time
     }
 
 
-    if (time() - $_SESSION['CREATED'] > 60)
-    {
+    if (time() - $_SESSION['CREATED'] > 60) {
         // session started more than 30 minutes ago
         session_destroy();
         header("location:sign-in");
         exit();
     }
-
 }
 
 function logout_time()
@@ -84,43 +80,40 @@ function logout_time()
 
 function master_developer()
 {
-  if("amritforu8896935191"!=$_SESSION['session_master'])
-  {
-    $_SESSION['msg']=array('error', 'Server error!!');
-    header("location:index.php");
-    exit;
-  }
+    if ("amritforu8896935191" != $_SESSION['session_master']) {
+        $_SESSION['msg'] = array('error', 'Server error!!');
+        header("location:index.php");
+        exit;
+    }
 }
 
 // function for user login validation
 function validate_user()
 {
-	if (time() - $_SESSION['CREATED_USER'] > 1800) 
-  	{
-  		// session started more than 30 minutes ago
-    	//session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
-    	//$_SESSION['CREATED'] = time();  // update creation time
-		session_destroy(); 
-		header("location:sign-in");
-		exit();
-	}
+    if (time() - $_SESSION['CREATED_USER'] > 1800) {
+        // session started more than 30 minutes ago
+        //session_regenerate_id(true);    // change session ID for the current session and invalidate old session ID
+        //$_SESSION['CREATED'] = time();  // update creation time
+        session_destroy();
+        header("location:sign-in");
+        exit();
+    }
 }
 
 function master_user()
 {
-	if(!isset($_SESSION['session_user']))
-	{
-		header("location:../login.html");
-		exit();
-	}
+    if (!isset($_SESSION['session_user'])) {
+        header("location:../login.html");
+        exit();
+    }
 }
 
 //SEO URL Friendly
-function clean($string) 
+function clean($string)
 {
-   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-   $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-   return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
+    $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+    $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+    return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
 }
 
 //SEO URL Friendly
@@ -133,114 +126,97 @@ function clean_witout_underscore($string)
 
 function date_dmy($date)
 {
-	if($date!='' || $date!='0000-00-00 00:00:00')
-  	{
-  		return date("j M Y h:i A", strtotime($date));
-  	}
+    if ($date != '' || $date != '0000-00-00 00:00:00') {
+        return date("j M Y h:i A", strtotime($date));
+    }
 }
 
 function date_time_only($date)
 {
-    if($date!='' || $date!='0000-00-00 00:00:00')
-    {
+    if ($date != '' || $date != '0000-00-00 00:00:00') {
         return date("h:i:s A", strtotime($date));
     }
 }
 
 function date_dmy_small($date)
 {
-  	if($date!='' && $date!='0000-00-00')
-  	{
-  		 return date("j M Y", strtotime($date));
-  	}
+    if ($date != '' && $date != '0000-00-00') {
+        return date("j M Y", strtotime($date));
+    }
 }
 
 // function to access description form content table
 function enc($val)
 {
-	if($val!='')
-	{
-		$new_val=base64_encode(base64_encode(base64_encode(base64_encode($val))));
-		return $new_val;
-	}
+    if ($val != '') {
+        $new_val = base64_encode(base64_encode(base64_encode(base64_encode($val))));
+        return $new_val;
+    }
 }
 
 function dec($val)
 {
-	if($val!='')
-	{
-		$org_val=base64_decode(base64_decode(base64_decode(base64_decode($val))));
-		return $org_val;
-	}
+    if ($val != '') {
+        $org_val = base64_decode(base64_decode(base64_decode(base64_decode($val))));
+        return $org_val;
+    }
 }
 
-function data_cutter($data,$cut)
+function data_cutter($data, $cut)
 {
-	if(strlen(stripslashes($data))>$cut)
-	{
-		$cutdata=ucfirst(substr(stripslashes($data),0,$cut)).".."; 
-	}
-	else 
-	{
-		$cutdata=stripslashes($data); 
-	}
-	return $cutdata;
+    if (strlen(stripslashes($data)) > $cut) {
+        $cutdata = ucfirst(substr(stripslashes($data), 0, $cut)) . "..";
+    } else {
+        $cutdata = stripslashes($data);
+    }
+    return $cutdata;
 }
 
-function data_cutter_clean($data,$cut)
+function data_cutter_clean($data, $cut)
 {
-	if(strlen(stripslashes($data))>$cut)
-	{
-		$cutdata=ucfirst(substr(stripslashes($data),0,$cut)); 
-	}
-	else 
-	{
-		$cutdata=stripslashes($data); 
-	}
-	return $cutdata;
+    if (strlen(stripslashes($data)) > $cut) {
+        $cutdata = ucfirst(substr(stripslashes($data), 0, $cut));
+    } else {
+        $cutdata = stripslashes($data);
+    }
+    return $cutdata;
 }
 
 function date_dm($date)
 {
-  	if($date!='' && $date!='0000-00-00 00:00:00' && $date!='0000-00-00')
-  	{
-		return date("j M Y",strtotime($date));
-  	}
+    if ($date != '' && $date != '0000-00-00 00:00:00' && $date != '0000-00-00') {
+        return date("j M Y", strtotime($date));
+    }
 }
 
-function curPageName() 
+function curPageName()
 {
-	return substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1);
+    return substr($_SERVER["SCRIPT_NAME"], strrpos($_SERVER["SCRIPT_NAME"], "/") + 1);
 }
 
-$currentPG=curPageName(); 
+$currentPG = curPageName();
 //session_destroy();
 
-function get_ip() 
+function get_ip()
 {
-	//Just get the headers if we can or else use the SERVER global
-	if ( function_exists( 'apache_request_headers' ) ) 
-	{
-		$headers = apache_request_headers();
-	} else 
-	{
-			$headers = $_SERVER;
-	}
-	//Get the forwarded IP if it exists
-	if ( array_key_exists( 'X-Forwarded-For', $headers ) && filter_var( $headers['X-Forwarded-For'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ) 			    {
-		$the_ip = $headers['X-Forwarded-For'];
-	} 
-	elseif ( array_key_exists( 'HTTP_X_FORWARDED_FOR', $headers ) && filter_var( $headers['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 )
-		) 
-	{
-		$the_ip = $headers['HTTP_X_FORWARDED_FOR'];
-	} 
-	else 
-	{
-			
-		$the_ip = filter_var( $_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
-	}
-	return $the_ip;
+    //Just get the headers if we can or else use the SERVER global
+    if (function_exists('apache_request_headers')) {
+        $headers = apache_request_headers();
+    } else {
+        $headers = $_SERVER;
+    }
+    //Get the forwarded IP if it exists
+    if (array_key_exists('X-Forwarded-For', $headers) && filter_var($headers['X-Forwarded-For'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        $the_ip = $headers['X-Forwarded-For'];
+    } elseif (
+        array_key_exists('HTTP_X_FORWARDED_FOR', $headers) && filter_var($headers['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)
+    ) {
+        $the_ip = $headers['HTTP_X_FORWARDED_FOR'];
+    } else {
+
+        $the_ip = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+    }
+    return $the_ip;
 }
 
 //Date ago time*/
@@ -249,205 +225,217 @@ function timeAgo($time_ago)
     $time_ago = strtotime($time_ago);
     $cur_time   = time();
     $time_elapsed   = $cur_time - $time_ago;
-    $seconds    = $time_elapsed ;
-    $minutes    = round($time_elapsed / 60 );
+    $seconds    = $time_elapsed;
+    $minutes    = round($time_elapsed / 60);
     $hours      = round($time_elapsed / 3600);
-    $days       = round($time_elapsed / 86400 );
+    $days       = round($time_elapsed / 86400);
     $weeks      = round($time_elapsed / 604800);
-    $months     = round($time_elapsed / 2600640 );
-    $years      = round($time_elapsed / 31207680 );
+    $months     = round($time_elapsed / 2600640);
+    $years      = round($time_elapsed / 31207680);
     // Seconds
-    if($seconds <= 60){
+    if ($seconds <= 60) {
         echo "Just now";
     }
     //Minutes
-    else if($minutes <=60){
-        if($minutes==1)
-		{
+    else if ($minutes <= 60) {
+        if ($minutes == 1) {
             echo "One minute ago";
-        }
-        else
-		{
+        } else {
             echo "$minutes minutes ago";
         }
     }
     //Hours
-    else if($hours <=24)
-	{
-        if($hours==1){
+    else if ($hours <= 24) {
+        if ($hours == 1) {
             echo "An hour ago";
-        }else{
+        } else {
             echo "$hours hrs ago";
         }
     }
     //Days
-    else if($days <= 7)
-	{
-        if($days==1){
+    else if ($days <= 7) {
+        if ($days == 1) {
             echo "Yesterday";
-        }else{
+        } else {
             echo "$days days ago";
         }
     }
     //Weeks
-    else if($weeks <= 4.3)
-	{
-        if($weeks==1){
+    else if ($weeks <= 4.3) {
+        if ($weeks == 1) {
             echo "A week ago";
-        }else{
+        } else {
             echo "$weeks weeks ago";
         }
     }
     //Months
-    else if($months <=12)
-	{
-        if($months==1){
+    else if ($months <= 12) {
+        if ($months == 1) {
             echo "A month ago";
-        }else{
+        } else {
             echo "$months months ago";
         }
     }
     //Years
-    else
-	{
-        if($years==1)
-		{
+    else {
+        if ($years == 1) {
             echo "One year ago";
-        }else{
+        } else {
             echo "$years years ago";
         }
     }
-}  
- 
-function yearCalculator($dt, $y){
-    if(!empty($dt)){
-        $dt=strtotime($dt);
-		$end = strtotime('+'. $y .'year', $dt);
-		$year=date('Y-m-d',$end);
-		//$year=date('d M Y',$end);
-		return $year;
-    }else{
+}
+
+function yearCalculator($dt, $y)
+{
+    if (!empty($dt)) {
+        $dt = strtotime($dt);
+        $end = strtotime('+' . $y . 'year', $dt);
+        $year = date('Y-m-d', $end);
+        //$year=date('d M Y',$end);
+        return $year;
+    } else {
         return 0;
     }
 }
 
-function simpleInterest($p, $r, $t){
-	
-	$si = ($p*$r*$t)/100;
-	
-	$amt=$p+$si;
-	
-	return $amt;
-}
- 
-function insert_ledger($to, $from, $typ, $amt, $prt, $ttyp, $description='', $byledger)
+function simpleInterest($p, $r, $t)
 {
-	global $DB_LINK;
-	$ins="INSERT INTO `tbl_leg_add` set `to_mem`='".$to."', `from_mem`='".$from."', `typ` ='$typ', `amt`='".$amt."', `dt`='".date("Y-m-d")."', `part`='$prt', ttyp='$ttyp', txnid='".time().rand(100,999)."', description='$description', byledger='$byledger'";
-	mysqli_query($DB_LINK,$ins);
+
+    $si = ($p * $r * $t) / 100;
+
+    $amt = $p + $si;
+
+    return $amt;
 }
 
-function insert_ledger_rec($to, $typ, $amt, $prt, $ttyp)
+// function insert_ledger($to, $from, $typ, $amt, $prt, $ttyp, $description = '', $byledger)
+// {
+//     global $DB_LINK;
+//     $ins = "INSERT INTO `tbl_leg_add` set `to_mem`='" . $to . "', `from_mem`='" . $from . "', `typ` ='$typ', `amt`='" . $amt . "', `dt`='" . date("Y-m-d") . "', `part`='$prt', ttyp='$ttyp', txnid='" . time() . rand(100, 999) . "', description='$description', byledger='$byledger'";
+//     mysqli_query($DB_LINK, $ins);
+// }
+
+// function insert_ledger_rec($to, $typ, $amt, $prt, $ttyp)
+// {
+//     global $DB_LINK;
+//     $ins = "INSERT INTO `tbl_leg_rec` set `member`='" . $to . "', `typ` ='$typ', `amt`='" . $amt . "', `dt`='" . date("Y-m-d") . "', `part`='$prt', ttyp='$ttyp', txnid='" . time() . rand(100, 999) . "'";
+//     mysqli_query($DB_LINK, $ins);
+// }
+
+function sentwp_sms($mobile, $msg, $Id = 0)
 {
-	global $DB_LINK;
-	$ins="INSERT INTO `tbl_leg_rec` set `member`='".$to."', `typ` ='$typ', `amt`='".$amt."', `dt`='".date("Y-m-d")."', `part`='$prt', ttyp='$ttyp', txnid='".time().rand(100,999)."'";
-	mysqli_query($DB_LINK,$ins);
+    global $DB_LINK, $TodayDateFull;
+
+    $msg = str_replace(' ', '%20', $msg);
+    $msg = urlencode($msg);
+
+    $sql_log_typ_firm = " select * from tab_firm  where id='25' ";
+    $firm_data = mysqli_fetch_assoc(mysqli_query($DB_LINK, $sql_log_typ_firm));
+    $wp_username = $firm_data['wp_username'];
+    $wp_password = $firm_data['wp_password'];
+    echo  $wp_api_token = $firm_data['wp_api_token'];
+    //  $REGARDS = $firm_data['name'];
+
+    // $curl = curl_init();
+    // curl_setopt_array($curl, array(
+    //     CURLOPT_URL => 'https://api.devindia.in/api/send/text/message/v1',
+    //     CURLOPT_RETURNTRANSFER => true,
+    //     CURLOPT_ENCODING => '',
+    //     CURLOPT_MAXREDIRS => 10,
+    //     CURLOPT_TIMEOUT => 0,
+    //     CURLOPT_FOLLOWLOCATION => true,
+    //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //     CURLOPT_CUSTOMREQUEST => 'POST',
+    //     CURLOPT_POSTFIELDS => http_build_query(array(
+    //         'username' => $wp_username,
+    //         'password' => $wp_password,
+    //         'receiver_number' => '91' . $mobile,
+    //         'msgtext' => $msg,
+    //         'token' => $wp_api_token,
+    //     )),
+    // ));
+    // $response = curl_exec($curl);
+    // $err = curl_error($curl);
+    // curl_close($curl);
+
+
+    $Url_Wp = "https://int.chatway.in/api/send-msg?username=$wp_username&number=91$mobile&message=$msg&token=$wp_api_token";
+
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $Url_Wp,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: a842d12e022a86cef1417c4d0641b5bc=dt3d7ej9lu4mj9ms0jpud68ukf'
+        ),
+    ));
+
+    echo  $response = curl_exec($curl);
+    curl_close($curl);
+    //echo $result = $response;
+
+    $status = '1';
+    $sentdate = $TodayDateFull;
+
+
+    wp_sms_store($msg, $mobile, $status, $sentdate, $Id, $response);
 }
 
-function sentwp_sms($mobile,$msg,$Id=0)
-{
-	global $DB_LINK, $TodayDateFull;
-	
-	// $msg = str_replace(' ', '%20', $msg);
-	//$msg=urlencode($msg);
-	
-	$sql_log_typ_firm = " select * from firm  where id='25' ";
-	$firm_data = mysqli_fetch_assoc(mysqli_query($DB_LINK, $sql_log_typ_firm));
-	$wp_username = $firm_data['wp_username'];
-	$wp_password = $firm_data['wp_password'];
-	$wp_api_token = $firm_data['wp_api_token'];
-	$REGARDS = $firm_data['name'];
-	
-	$curl = curl_init();
-	curl_setopt_array($curl, array(
-		CURLOPT_URL => 'https://api.devindia.in/api/send/text/message/v1',
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_ENCODING => '',
-		CURLOPT_MAXREDIRS => 10,
-		CURLOPT_TIMEOUT => 0,
-		CURLOPT_FOLLOWLOCATION => true,
-		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		CURLOPT_CUSTOMREQUEST => 'POST',
-		CURLOPT_POSTFIELDS => http_build_query(array(
-			'username' => $wp_username,
-			'password' => $wp_password,
-			'receiver_number' => '91' . $mobile,
-			'msgtext' => $msg,
-			'token' => $wp_api_token,
-		)),
-	));
-	$response = curl_exec($curl);
-	$err = curl_error($curl);
-	curl_close($curl);
-	
-	 
-	wp_sms_store($msg, $mobile, $status, $sentdate, $Id, $response);
-		
-		
-		 
-}
-
-function wp_sms_store($msg,$contact,$status,$sentdate,$Id,$response)
+function wp_sms_store($msg, $contact, $status, $sentdate, $Id, $response)
 {
     global $DB_LINK;
-    if($Id=='0')
-        $Id=rand(1000,9999);
-    $ip=get_ip();
-    if(isset($_SESSION['session_master']))
-        $log_id=$_SESSION['session_master'];
+    if ($Id == '0')
+        $Id = rand(1000, 9999);
+    $ip = get_ip();
+    if (isset($_SESSION['session_master']))
+        $log_id = $_SESSION['session_master'];
     else
-        $log_id="0";
+        $log_id = "0";
 
-    if(isset($_SESSION['master_company_id']))
-        $firm_id=$_SESSION['master_company_id'];
+    if (isset($_SESSION['master_company_id']))
+        $firm_id = $_SESSION['master_company_id'];
     else
-        $firm_id="0";
+        $firm_id = "0";
 
-    if($sentdate!='NULL') $sentdt=", `sent_date`='$sentdate'";
+    if ($sentdate != 'NULL') $sentdt = ", `sent_date`='$sentdate'";
 
-     $qry="INSERT INTO `log_wp_msg` set 
+    $qry = "INSERT INTO `log_wp_msg` set 
     `ip`='$ip', 
     `log_id`='$log_id', 
     `firm_id`='$firm_id', 
-    `msg`='".$msg."', 
+    `msg`='" . $msg . "', 
     `contact`='$contact',
     `status`=$status,
     rec_id='$Id',
     response='$response'
     $sentdt    ";
 
-    $dup_user=mysqli_num_rows(mysqli_query($DB_LINK,"select * from log_wp_msg where 
-                       rec_id='".$Id."' and  log_id='$log_id'  "));
-    if($dup_user<1)
-    {
-        mysqli_query($DB_LINK,$qry);
+    $dup_user = mysqli_num_rows(mysqli_query($DB_LINK, "select * from log_wp_msg where 
+                       rec_id='" . $Id . "' and  log_id='$log_id'  "));
+    if ($dup_user < 1) {
+        mysqli_query($DB_LINK, $qry);
     }
-
-
 }
 
 function wp_sms_balance()
 {
     global $DB_LINK;
 
-    $sql_log_typ_firm = " select * from firm  where id='".$_SESSION['master_company_id']."' ";
-    $firm_data=mysqli_fetch_assoc(mysqli_query($DB_LINK, $sql_log_typ_firm ));
-    $wp_username=$firm_data['wp_username'];
-    $wp_api_token_credit=$firm_data['wp_api_token_credit'];
+    $sql_log_typ_firm = " select * from firm  where id='" . $_SESSION['master_company_id'] . "' ";
+    $firm_data = mysqli_fetch_assoc(mysqli_query($DB_LINK, $sql_log_typ_firm));
+    $wp_username = $firm_data['wp_username'];
+    $wp_api_token_credit = $firm_data['wp_api_token_credit'];
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://int.chatway.in/api/credits?username=".$wp_username."&token=".$wp_api_token_credit."",
+        CURLOPT_URL => "https://int.chatway.in/api/credits?username=" . $wp_username . "&token=" . $wp_api_token_credit . "",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -462,15 +450,15 @@ function wp_sms_balance()
 
     $response = curl_exec($curl);
     curl_close($curl);
-    $result=$response;
+    $result = $response;
     $a = json_decode($result, true);
-    $b=$a["credits"];
-    foreach($b as $elem)  {
-        $c=$elem["credits_bal"];
+    $b = $a["credits"];
+    foreach ($b as $elem) {
+        $c = $elem["credits_bal"];
     }
 
     //$b=json_decode(json_encode($a["credits"]), true);;
-    return $c ;
+    return $c;
 
 
 
@@ -504,68 +492,73 @@ function wp_sms_balance()
         $client1->enqueue($request1)->send();
         $response1 = $client1->getResponse();
         $result=$response1->getBody();*/
-	
-
-
 }
 
 function alert_msg($type, $module)
 {
-    switch($type)
-    {
-        case 'success': $toastr = 'Successfully !!'; $sweetalert = 'success';
-        break;
-        case 'error': $toastr = 'Error !!'; $sweetalert = 'error';
-        break;
-        case 'warning': $toastr = 'Warning !!'; $sweetalert = 'warning';
-        break;
-        case 'info': $toastr = 'Welcome !!'; $sweetalert = 'info';
-        break;
+    switch ($type) {
+        case 'success':
+            $toastr = 'Successfully !!';
+            $sweetalert = 'success';
+            break;
+        case 'error':
+            $toastr = 'Error !!';
+            $sweetalert = 'error';
+            break;
+        case 'warning':
+            $toastr = 'Warning !!';
+            $sweetalert = 'warning';
+            break;
+        case 'info':
+            $toastr = 'Welcome !!';
+            $sweetalert = 'info';
+            break;
     }
     $result = array($toastr, $sweetalert);
     return $result;
-}function logEvent($msg, $message)
+}
+function logEvent($msg, $message)
 {
-	global $DB_LINK;
-    if ($message != '') 
-	{
-		$delim = "\t";   // set delim, eg tab 
-		$res = mysqli_query($DB_LINK,$msg); 
-		while ($row = mysqli_fetch_row($res)) { 
-    		$scoredata = $row;
-		} 
+    global $DB_LINK;
+    if ($message != '') {
+        $delim = "\t";   // set delim, eg tab 
+        $res = mysqli_query($DB_LINK, $msg);
+        while ($row = mysqli_fetch_row($res)) {
+            $scoredata = $row;
+        }
         // Add a timestamp to the start of the $message
         //$message = date("Y/m/d H:i:s").': '.$message."\r\n";
-		$message = date("Y/m/d H:i:s").': '.$message."".PHP_EOL;
+        $message = date("Y/m/d H:i:s") . ': ' . $message . "" . PHP_EOL;
         //$fp = fopen('appLog-'.date('d-m-Y').'.txt', 'a');
-		$fp = fopen('logs/appLog-'.date('d-m-Y').'.txt', 'a');
+        $fp = fopen('logs/appLog-' . date('d-m-Y') . '.txt', 'a');
         fwrite($fp, $message);
-		fwrite($fp, join($delim, $scoredata) . "\r\n"); 
+        fwrite($fp, join($delim, $scoredata) . "\r\n");
         fclose($fp);
     }
 }
- 
-function randomString($length = 8) 
-{
-  $str = "";
-  $characters = array_merge(range('A','Z'));
-  $max = count($characters) - 1;
-  for ($i = 0; $i < $length/2; $i++) {
-    $rand = mt_rand(0, $max);
-    $str .= $characters[$rand];
-  }
-  $characters = array_merge( range('0','9'));
-  $max = count($characters) - 1;
-  for ($i = 0; $i < $length/2; $i++) {
-    $rand = mt_rand(0, $max);
-    $str .= $characters[$rand];
-  }
-  return $str;
-}  
 
-function sanitizeInput($data) {
+function randomString($length = 8)
+{
+    $str = "";
+    $characters = array_merge(range('A', 'Z'));
+    $max = count($characters) - 1;
+    for ($i = 0; $i < $length / 2; $i++) {
+        $rand = mt_rand(0, $max);
+        $str .= $characters[$rand];
+    }
+    $characters = array_merge(range('0', '9'));
+    $max = count($characters) - 1;
+    for ($i = 0; $i < $length / 2; $i++) {
+        $rand = mt_rand(0, $max);
+        $str .= $characters[$rand];
+    }
+    return $str;
+}
+
+function sanitizeInput($data)
+{
     $data = trim($data); // Remove unnecessary spaces
     $data = stripslashes($data); // Remove backslashes
     $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8'); // Convert special characters to HTML entities
     return $data;
-}    ?>
+}

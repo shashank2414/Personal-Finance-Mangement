@@ -17,7 +17,7 @@ body {
 /* ========Session Msg Pop Up box======= */
 #msgBox {
   position: fixed;
-  top: 10px;
+  top: 20px;
   background-color: #4caf50;
   color: white;
   padding: 10px;
