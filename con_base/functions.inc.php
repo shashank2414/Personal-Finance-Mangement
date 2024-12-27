@@ -327,58 +327,64 @@ function sentwp_sms($mobile, $msg, $Id = 0)
 {
     global $DB_LINK, $TodayDateFull;
 
-    $msg = str_replace(' ', '%20', $msg);
-    $msg = urlencode($msg);
+    //$msg = str_replace(' ', '%20', $msg);
+     //$msg = urlencode($msg);
 
     $sql_log_typ_firm = " select * from tab_firm  where id='25' ";
     $firm_data = mysqli_fetch_assoc(mysqli_query($DB_LINK, $sql_log_typ_firm));
     $wp_username = $firm_data['wp_username'];
     $wp_password = $firm_data['wp_password'];
-    echo  $wp_api_token = $firm_data['wp_api_token'];
-    //  $REGARDS = $firm_data['name'];
-
-    // $curl = curl_init();
-    // curl_setopt_array($curl, array(
-    //     CURLOPT_URL => 'https://api.devindia.in/api/send/text/message/v1',
-    //     CURLOPT_RETURNTRANSFER => true,
-    //     CURLOPT_ENCODING => '',
-    //     CURLOPT_MAXREDIRS => 10,
-    //     CURLOPT_TIMEOUT => 0,
-    //     CURLOPT_FOLLOWLOCATION => true,
-    //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    //     CURLOPT_CUSTOMREQUEST => 'POST',
-    //     CURLOPT_POSTFIELDS => http_build_query(array(
-    //         'username' => $wp_username,
-    //         'password' => $wp_password,
-    //         'receiver_number' => '91' . $mobile,
-    //         'msgtext' => $msg,
-    //         'token' => $wp_api_token,
-    //     )),
-    // ));
-    // $response = curl_exec($curl);
-    // $err = curl_error($curl);
-    // curl_close($curl);
+    $wp_api_token = $firm_data['wp_api_token'];
+    //  $REGARDS = $firm_data['name']; 
 
 
-    $Url_Wp = "https://int.chatway.in/api/send-msg?username=$wp_username&number=91$mobile&message=$msg&token=$wp_api_token";
+
+ 
+
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => $Url_Wp,
+        CURLOPT_URL => 'https://api.devindia.in/api/send/text/message/v1',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
         CURLOPT_TIMEOUT => 0,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Cookie: a842d12e022a86cef1417c4d0641b5bc=dt3d7ej9lu4mj9ms0jpud68ukf'
-        ),
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => http_build_query(array(
+            'username' => $wp_username,
+            'password' => $wp_password,
+            'receiver_number' => '91' . $mobile,
+            'msgtext' => $msg,
+            'token' => $wp_api_token,
+        )),
     ));
-
-    echo  $response = curl_exec($curl);
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
     curl_close($curl);
+ 
+
+
+//   echo   $Url_Wp = "https://int.chatway.in/api/send-msg?username=$wp_username&number=91$mobile&message=$msg&token=$wp_api_token";
+//   exit;
+//     $curl = curl_init();
+//     curl_setopt_array($curl, array(
+//         CURLOPT_URL => $Url_Wp,
+//         CURLOPT_RETURNTRANSFER => true,
+//         CURLOPT_ENCODING => '',
+//         CURLOPT_MAXREDIRS => 10,
+//         CURLOPT_TIMEOUT => 0,
+//         CURLOPT_FOLLOWLOCATION => true,
+//         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//         CURLOPT_CUSTOMREQUEST => 'GET',
+//         CURLOPT_HTTPHEADER => array(
+//             'Cookie: a842d12e022a86cef1417c4d0641b5bc=dt3d7ej9lu4mj9ms0jpud68ukf'
+//         ),
+//     ));
+
+//     echo  $response = curl_exec($curl);
+//     curl_close($curl);
     //echo $result = $response;
 
     $status = '1';
