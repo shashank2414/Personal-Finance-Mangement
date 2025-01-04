@@ -1,5 +1,65 @@
 <?php 
  require('con_base/functions.inc.php');
+ $phone = $_GET['mobile'];
+
+  if($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+    $sql_otp_verification = "SELECT * FROM tab_login where user=$phone";
+    $stmt_otp_verification = $PDO_LINK->prepare($sql_otp_verification);
+    $stmt_otp_verification->execute();
+    $result = $stmt_otp_verification->fetch(PDO::FETCH_ASSOC);
+        
+
+    if(isset($_POST['otp-submit'])){
+      $entered_otp = sanitizeInput($_POST['otp_digit_1']) . sanitizeInput($_POST['otp_digit_2']) . sanitizeInput($_POST['otp_digit_3']) . sanitizeInput($_POST['otp_digit_4']) . sanitizeInput($_POST['otp_digit_5']) . sanitizeInput($_POST['otp_digit_6']) ;
+
+      if(strlen($entered_otp) == 6){
+           if($entered_otp === $result['otp']){
+             
+             $status = 1;
+
+              try {
+
+                  $sql0 = "UPDATE tab_user SET status=:status where mobile=:phone";
+                  $stmt0 = $PDO_LINK->prepare($sql0);
+                  $stmt0->bindParam(':status', $status, PDO::PARAM_STR);
+                  $stmt0->bindParam(':phone', $phone);
+                
+                  if ($stmt0->execute()) {
+
+                    $sql = "UPDATE tab_login SET status=:status where user=:phone";
+                    $stmt = $PDO_LINK->prepare($sql);
+                    $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+                    $stmt->bindParam(':phone', $phone);
+                    $stmt->execute();
+                    $_SESSION['msg'] = "Your Profile has been created with us. UserID and Password has been sent to your mobile";
+                    $_SESSION['msg_type'] = "success";
+                     header("location: home.php");
+                     exit;
+                  }else{
+                     $_SESSION['msg'] = "Error: " . $e->getMessage();
+                  $_SESSION['msg_type'] = "error";
+                  }
+
+                } catch (PDOException $e) {
+                  $_SESSION['msg'] = "Error: " . $e->getMessage();
+                  $_SESSION['msg_type'] = "error";
+                }
+
+            
+           }else{
+            $_SESSION['msg'] = "Invalid OTP";
+             $_SESSION['msg_type'] = "error";
+           }
+
+      }else{
+             $_SESSION['msg'] = "Fill all the boxes";
+             $_SESSION['msg_type'] = "error";
+      }
+
+    }
+    
+  }
 ?>
 
 <!DOCTYPE html>

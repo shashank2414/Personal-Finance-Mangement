@@ -4,7 +4,7 @@ window.onload = function () {
   if (msgBox) {
     setTimeout(() => {
       msgBox.style.display = "none";
-    }, 3000);
+    }, 5000);
   }
 };
 
