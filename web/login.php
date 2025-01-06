@@ -12,24 +12,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pass = enc(sanitizeInput($_POST['password']));
     $otp = rand(100000, 999999);
 
-    
+
 
     // $msg = "Hi Sir/mam\n\n\n*Your mobile verification otp is : " . $otp . ".*\n\nKindly verify your mobile number.\n\nThanks. \n\n*Regards PFM*";
     // echo  sentwp_sms($phone, $msg);
 
-    if(strlen($phone) === 10 ){
+    if (strlen($phone) === 10) {
       try {
 
         /////Find Dupilicate with status 0///
-          $sql_dup = "SELECT * FROM tab_user WHERE mobile = :mobile";
-          $stmt_dup = $PDO_LINK->prepare($sql_dup);
-          $stmt_dup->bindParam(':mobile', $phone, PDO::PARAM_STR);
-          $stmt_dup->execute();
+        $sql_dup = "SELECT * FROM tab_user WHERE mobile = :mobile";
+        $stmt_dup = $PDO_LINK->prepare($sql_dup);
+        $stmt_dup->bindParam(':mobile', $phone, PDO::PARAM_STR);
+        $stmt_dup->execute();
 
-          // Get the number of rows returned
-           
-          if($stmt_dup->rowCount()>0)
-          {
+        // Get the number of rows returned
+
+        if ($stmt_dup->rowCount() > 0) {
           $sql_dup = "delete FROM tab_user WHERE mobile = :mobile";
           $stmt_dup = $PDO_LINK->prepare($sql_dup);
           $stmt_dup->bindParam(':mobile', $phone, PDO::PARAM_STR);
@@ -39,51 +38,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           $stmt_dup = $PDO_LINK->prepare($sql_dup);
           $stmt_dup->bindParam(':mobile', $phone, PDO::PARAM_STR);
           $stmt_dup->execute();
+        }
+
+        /////Find Dupilicate with status 0///
+
+
+
+        $sql1 = "INSERT INTO tab_user (name, mobile) VALUES (:name, :mobile)";
+        $stmt1 = $PDO_LINK->prepare($sql1);
+        $stmt1->bindParam(':name', $username, PDO::PARAM_STR);
+        $stmt1->bindParam(':mobile', $phone, PDO::PARAM_STR);
+        if ($stmt1->execute()) {
+
+          $sql = "INSERT INTO tab_login (user, username, mobile, pass,otp) VALUES (:user,:username, :phone, :pass,:otp)";
+          $stmt = $PDO_LINK->prepare($sql);
+          $stmt->bindParam(':user', $phone, PDO::PARAM_STR);
+          $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+          $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
+          $stmt->bindParam(':pass', $pass, PDO::PARAM_STR);
+          $stmt->bindParam(':otp', $otp, PDO::PARAM_STR);
+
+          if ($stmt->execute()) {
+            $_SESSION['msg'] = "Otp sent to your mobile";
+            $_SESSION['msg_type'] = "success";
+            $msg = "Hi Sir/mam\n\n\n*Your mobile verification otp is : " . $otp . ".*\n\nKindly verify your mobile number.\n\nThanks. \n\n*Regards PFM*";
+            sentwp_sms($phone, $msg);
+            header("Location: auth.php?mobile=$phone");
+            exit;
+          } else {
+            $_SESSION['msg'] = "Failed to submit data.";
+            $_SESSION['msg_type'] = "error";
           }
-
-         /////Find Dupilicate with status 0///
-
-           
-
-      $sql1 = "INSERT INTO tab_user (name, mobile) VALUES (:name, :mobile)";
-      $stmt1 = $PDO_LINK->prepare($sql1);
-      $stmt1->bindParam(':name', $username, PDO::PARAM_STR);
-      $stmt1->bindParam(':mobile', $phone, PDO::PARAM_STR);
-      if ($stmt1->execute()) {
-
-        $sql = "INSERT INTO tab_login (user, username, mobile, pass,otp) VALUES (:user,:username, :phone, :pass,:otp)";
-        $stmt = $PDO_LINK->prepare($sql);
-        $stmt->bindParam(':user', $phone, PDO::PARAM_STR);
-        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-        $stmt->bindParam(':phone', $phone, PDO::PARAM_STR);
-        $stmt->bindParam(':pass', $pass, PDO::PARAM_STR);
-        $stmt->bindParam(':otp', $otp, PDO::PARAM_STR);
-
-        if ($stmt->execute()) {
-          $_SESSION['msg'] = "Otp sent to your mobile";
-          $_SESSION['msg_type'] = "success";
-          // $msg = "Hi Sir/mam\n\n\n*Your mobile verification otp is : " . $otp . ".*\n\nKindly verify your mobile number.\n\nThanks. \n\n*Regards PFM*";
-          // sentwp_sms($phone, $msg);
-          header("Location: auth.php?mobile=$phone");
-          exit;
         } else {
           $_SESSION['msg'] = "Failed to submit data.";
           $_SESSION['msg_type'] = "error";
         }
-      } else {
-        $_SESSION['msg'] = "Failed to submit data.";
+      } catch (PDOException $e) {
+        $_SESSION['msg'] = "Error: " . $e->getMessage();
         $_SESSION['msg_type'] = "error";
       }
-    } catch (PDOException $e) {
-      $_SESSION['msg'] = "Error: " . $e->getMessage();
+    } else {
+      $_SESSION['msg'] = "Enter 10 digit mobile number";
       $_SESSION['msg_type'] = "error";
     }
-    }else{
-       $_SESSION['msg'] = "Enter 10 digit mobile number";
-      $_SESSION['msg_type'] = "error";
-    }
-
-    
   }
 
 
@@ -95,34 +92,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $sql_signin = "SELECT * FROM tab_login where user=$mobile and status=1 ";
     $stmt_signin = $PDO_LINK->prepare($sql_signin);
-    
 
-    if($stmt_signin->execute()){
+
+    if ($stmt_signin->execute()) {
       $result = $stmt_signin->fetch(PDO::FETCH_ASSOC);
-      if($result){
+      if ($result) {
         $main_mobile = $result['mobile'];
         $main_pass = dec($result['pass']);
 
-        if($mobile === $main_mobile && $pass === $main_pass){
+        if ($mobile === $main_mobile && $pass === $main_pass) {
 
           $_SESSION['msg'] = "Signed In 😊";
           $_SESSION['msg_type'] = "success";
 
-           header("location: home.php");
-           exit;
-        }else{
-         $_SESSION['msg'] = "Mobile or password is wrong";
+          header("location: home.php");
+          exit;
+        } else {
+          $_SESSION['msg'] = "Mobile or password is wrong";
           $_SESSION['msg_type'] = "error";
-
         }
-      }else{
+      } else {
         $_SESSION['msg'] = "Invalid Credential";
-          $_SESSION['msg_type'] = "error";
+        $_SESSION['msg_type'] = "error";
       }
-    }else{
-       $_SESSION['msg'] = "Some error occured, try again later";
-          $_SESSION['msg_type'] = "error";
-
+    } else {
+      $_SESSION['msg'] = "Some error occured, try again later";
+      $_SESSION['msg_type'] = "error";
     }
   }
 }
@@ -130,26 +125,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 /* ===========hidden forgot password php=================== */
 
 
-if(isset($_POST['send-otp-submit'])){
+if (isset($_POST['send-otp-submit'])) {
 
-    $mobile = sanitizeInput($_POST['mobile']);
-    $updated_otp = rand(111111, 999999);
-    
-    $sql = "update tab_login set otp=:updated_otp where mobile=:mobile";
-    $stmt = $PDO_LINK->prepare($sql);
-    $stmt->bindParam(":updated_otp", $updated_otp);
-    $stmt->bindParam(":mobile", $mobile);
+  $mobile = sanitizeInput($_POST['mobile']);
+  $updated_otp = rand(111111, 999999);
 
-    if($stmt->execute()){
-      echo "<script>alert('updated')</script>";
-    }else{
-      echo "<script>alert('error')</script>";
+  $sql = "update tab_login set otp=:updated_otp where mobile=:mobile";
+  $stmt = $PDO_LINK->prepare($sql);
+  $stmt->bindParam(":updated_otp", $updated_otp);
+  $stmt->bindParam(":mobile", $mobile);
 
-    }
+  if ($stmt->execute()) {
+    $msg = "Hi Sir/mam\n\n\n*Your forget password verification otp is : " . $updated_otp . ".*\n\nKindly verify otp to get new password on mobile.\n\nThanks. \n\n*Regards PFM*";
+    sentwp_sms($mobile, $msg);
+  } else {
+    echo "<script>alert('error')</script>";
+  }
 
-    header("Location: auth.php?mobile=$mobile");
-    exit;
- }
+  header("Location: auth.php?mobile=$mobile");
+  exit;
+}
 
 ?>
 
@@ -160,7 +155,7 @@ if(isset($_POST['send-otp-submit'])){
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   
+
   <title>PFM | Sign Up</title>
   <?php require("include/header_link.php"); ?>
 
@@ -178,29 +173,29 @@ if(isset($_POST['send-otp-submit'])){
 </head>
 
 <body>
-   <!-- ========Session Msg Display============= -->
+  <!-- ========Session Msg Display============= -->
 
-    <?php require("include/session_msg.php"); ?>
+  <?php require("include/session_msg.php"); ?>
 
   <!-- ==========hidden form for forgot password================ -->
-    
-     <div id="forgot-popup" class="popup-container">
-      <div class="popup-content">
-        <form id="forgot_form" action="" method="post">
-          <div class="forgot_heading">
-            <img class="heartbeat" src="../assets/images/forgot-password.png" alt="">
-            <h1>Forgot Password</h1>
-          </div>
-          <p id="forget_para">Please enter the 10-digit mobile number. We will send an OTP to your mobile.</p>
-          <div class="forgot-mobile-input">
-            <input type="number" maxlength="10" minlength="10" name="mobile" required />
-          </div>
-          <button id="otp-verify" type="submit" name="send-otp-submit" class="btn">Send OTP</button>
-        </form>
-        <button id="close-popup" class="close-btn">Close</button>
-      </div>
-    </div> 
-  
+
+  <div id="forgot-popup" class="popup-container">
+    <div class="popup-content">
+      <form id="forgot_form" action="" method="post">
+        <div class="forgot_heading">
+          <img class="heartbeat" src="../assets/images/forgot-password.png" alt="">
+          <h1>Forgot Password</h1>
+        </div>
+        <p id="forget_para">Please enter the 10-digit mobile number. We will send an OTP to your mobile.</p>
+        <div class="forgot-mobile-input">
+          <input type="number" maxlength="10" minlength="10" name="mobile" required />
+        </div>
+        <button id="otp-verify" type="submit" name="send-otp-submit" class="btn">Send OTP</button>
+      </form>
+      <button id="close-popup" class="close-btn">Close</button>
+    </div>
+  </div>
+
   <div class="container">
     <div class="signin-signup">
       <!-- ========= First Interface Sign in========== -->
