@@ -3,19 +3,20 @@
 // Globals
 global  $DB_LINK, $PDO_LINK;
 const LOCAL_HOST = 'localhost';
-const REMOTE_USERNAME = 'root';
-const REMOTE_PASSWORD = '';
-const DATABASE = 'finance_advisor';
-
 //const REMOTE_USERNAME = 'root';
 //const REMOTE_PASSWORD = '';
+const DATABASE = 'u144885197_web_db';
+
+const REMOTE_USERNAME = 'u144885197_web_user';
+const REMOTE_PASSWORD = '@I5yaZ7#90j';  
 
 
 
 // Database credentials
 $host = "localhost";
 $username = REMOTE_USERNAME;
-$password = "";
+$password = REMOTE_PASSWORD;
+$db = DATABASE;
 
 // Function to create MySQLi connection
 function createMysqliConnection($host, $username, $password, $db)

@@ -1,7 +1,7 @@
 <?php
 
 global $PDO_LINK;
-require('con_base/functions.inc.php');
+require('../con_base/functions.inc.php');
 
 // ========For Sign Up==========
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -124,9 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           $_SESSION['msg_type'] = "error";
 
     }
-
-    // header("location: auth.php");
-    // exit();
   }
 }
 
@@ -163,14 +160,10 @@ if(isset($_POST['send-otp-submit'])){
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link
-    rel="stylesheet"
-    href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
-    crossorigin="anonymous" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="responsive.css" />
+   
   <title>PFM | Sign Up</title>
+  <?php require("include/header_link.php"); ?>
+
   <style>
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
@@ -185,15 +178,9 @@ if(isset($_POST['send-otp-submit'])){
 </head>
 
 <body>
-  <?php
-  // ========Session Msg===========
-  if (isset($_SESSION['msg'])): ?>
-    <div id="msgBox" class="<?php echo $_SESSION['msg_type']; ?>">
-      <?php echo $_SESSION['msg'];
-      unset($_SESSION['msg'], $_SESSION['msg_type']); ?>
-    </div>
-  <?php endif;
-  ?>
+   <!-- ========Session Msg Display============= -->
+
+    <?php require("include/session_msg.php"); ?>
 
   <!-- ==========hidden form for forgot password================ -->
     
@@ -201,7 +188,7 @@ if(isset($_POST['send-otp-submit'])){
       <div class="popup-content">
         <form id="forgot_form" action="" method="post">
           <div class="forgot_heading">
-            <img class="heartbeat" src="./forgot-password.png" alt="">
+            <img class="heartbeat" src="../assets/images/forgot-password.png" alt="">
             <h1>Forgot Password</h1>
           </div>
           <p id="forget_para">Please enter the 10-digit mobile number. We will send an OTP to your mobile.</p>
@@ -212,13 +199,8 @@ if(isset($_POST['send-otp-submit'])){
         </form>
         <button id="close-popup" class="close-btn">Close</button>
       </div>
-    </div>
-
-
-  <!-- ==========hidden form for forgot password================ -->
-
-
-
+    </div> 
+  
   <div class="container">
     <div class="signin-signup">
       <!-- ========= First Interface Sign in========== -->
@@ -275,7 +257,7 @@ if(isset($_POST['send-otp-submit'])){
       <div class="panel left-panel">
         <div class="content">
           <img
-            src="dev.png"
+            src="../assets/images/dev.png"
             style="
                 width: 47%;
                 height: auto;
@@ -295,7 +277,7 @@ if(isset($_POST['send-otp-submit'])){
       <div class="panel right-panel">
         <div class="content">
           <img
-            src="dev.png"
+            src="../assets/images/dev.png"
             style="
                 width: 47%;
                 height: auto;
@@ -319,37 +301,10 @@ if(isset($_POST['send-otp-submit'])){
     </div>
   </div>
 
-<!-- /* ===========hidden forgot password script=================== */ -->
-
-  <script>
-  const forgotLink = document.querySelector('a[href="forgot_pass.php"]');
-  const popup = document.getElementById('forgot-popup');
-  const closePopup = document.getElementById('close-popup');
-  const sendOtpButton = document.getElementById('otp-verify');
-
-  // Show pop-up when "Forgot Password" is clicked
-  forgotLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    popup.style.display = 'flex';
-  });
-
-  // Hide pop-up when "Close" button is clicked
-  closePopup.addEventListener('click', () => {
-    popup.style.display = 'none';
-  });
-
-  // Hide pop-up with transition after "Send OTP" is clicked
-  sendOtpButton.addEventListener('click', () => {
-    popup.style.opacity = '0';
-    setTimeout(() => {
-      popup.style.display = 'none';
-      popup.style.opacity = '1';
-    }, 300); // Match the CSS transition duration
-  });
-</script>
 
 
-  <script src="app.js"></script>
+
+  <script src="../assets/script/app.js"></script>
 </body>
 
 </html>

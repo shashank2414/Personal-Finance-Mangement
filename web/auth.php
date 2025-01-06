@@ -68,29 +68,16 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-      integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="responsive.css" />
-
     <title>PFM | Authentication</title>
+
+    <?php require("include/header_link.php"); ?>
     
   </head>
   <body>
 
-  <?php
-  // ========Session Msg===========
-  if (isset($_SESSION['msg'])): ?>
-    <div id="msgBox" class="<?php echo $_SESSION['msg_type']; ?>">
-      <?php echo $_SESSION['msg'];
-      unset($_SESSION['msg'], $_SESSION['msg_type']); ?>
-    </div>
-  <?php endif;
-  ?>
+  <!-- ========Session Msg Display============= -->
+
+    <?php require("include/session_msg.php"); ?>
     
   
     <form action="" method="post">
@@ -111,27 +98,8 @@
    
 
   
-    <script src="app.js"></script>
+    <script src="assets/script/app.js"></script>
 
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
-    const inputs = document.querySelectorAll('.otp-input input');
-
-    inputs.forEach((input, index) => {
-        input.addEventListener('input', (e) => {
-            if (e.target.value.length === 1 && index < inputs.length - 1) {
-                inputs[index + 1].focus();
-               }
-           });
-           input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
-                        inputs[index - 1].focus();
-                    }
-                });
-       });
-   });
       
-     
-    </script>
   </body>
 </html>
