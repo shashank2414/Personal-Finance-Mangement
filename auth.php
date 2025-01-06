@@ -32,7 +32,7 @@
                     $stmt->bindParam(':status', $status, PDO::PARAM_STR);
                     $stmt->bindParam(':phone', $phone);
                     $stmt->execute();
-                    $_SESSION['msg'] = "Your Profile has been created with us. UserID and Password has been sent to your mobile";
+                    $_SESSION['msg'] = "Your UserID and Password has been sent to your mobile";
                     $_SESSION['msg_type'] = "success";
                      header("location: home.php");
                      exit;

@@ -4,6 +4,13 @@
     width: 100vw;
     height: 100vh;
   }
+
+  .landing-page-div {
+    width: 96%;
+  }
+  .landing-page-div img {
+    width: 62%;
+  }
 }
 @media (max-width: 635px) {
   .container::before {
@@ -33,14 +40,17 @@
   .account-text a {
     color: #6e54b5;
   }
-}
-@media (max-width: 320px) {
-  form {
-    width: 90%;
+  .popup-content {
+    width: 96%;
+  }
+  .landing-page-div {
+    width: 95%;
+  }
+  .landing-page-div img {
+    width: 60%;
   }
 }
 
-/* ======Auth page====== */
 @media (max-width: 400px) {
   .otp-container {
     width: 100%;
@@ -56,4 +66,64 @@
     padding: 8px 16px;
     font-size: 0.9em;
   }
+  .popup-content {
+    width: 95%;
+  }
+  .forgot_heading h1 {
+    font-size: 1.6rem;
+  }
+  #forget_para {
+    font-size: 1rem;
+  }
+
+  .landing-page-div {
+    width: 90%;
+  }
+  .landing-page-div img {
+    width: 55%;
+  }
 }
+
+@media (max-width: 360px) {
+  .popup-content {
+    width: 90%;
+  }
+
+  .forgot_heading h1 {
+    font-size: 1.4rem;
+  }
+  #forget_para {
+    font-size: 0.8rem;
+  }
+
+  .landing-page-div {
+    width: 85%;
+  }
+  .landing-page-div img {
+    width: 50%;
+  }
+}
+
+@media (max-width: 330px) {
+  form {
+    width: 90%;
+  }
+  .popup-content {
+    width: 85%;
+  }
+  .forgot_heading h1 {
+    font-size: 1.2rem;
+  }
+  #forget_para {
+    font-size: 0.8rem;
+  }
+
+  .landing-page-div {
+    width: 80%;
+  }
+  .landing-page-div img {
+    width: 45%;
+  }
+}
+
+/* ======Auth page====== */
