@@ -18,7 +18,7 @@
 
     <img src="../assets/images/dev.png" alt="">
     <h1>Welcome to Personal <br> Finance Management</h1>
-    <small>~Dev India IT Services</small>
+     
 
     <a href="login.php" class="btn" style="color: white; padding: 17px 20px;">NEXT</a>
 

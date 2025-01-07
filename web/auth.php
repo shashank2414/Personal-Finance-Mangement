@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $result = $stmt1->fetch(PDO::FETCH_ASSOC);
                 $pass = dec($result['pass']);
              
-                $msg = "Hi Sir/mam\n\n*Congrats 💐💐,\n Welcome to Personal Finance Management!! Take control of your finances today for a brighter tomorrow.*\n\n Grab your ID and Password 👇\n\n ID : *" . $phone . "*\n Password : *" . $pass . "*\n\nThanks\nRegards PFM";
+                $msg = "Hi Sir/mam\n\nCongrats 💐💐,\n Welcome to Personal Finance Management. Take control of your finances today for a brighter tomorrow.\n\n Grab your ID and Password 👇\n\n ID : *" . $phone . "*\n Password : *" . $pass . "*\n\nThanks\nRegards PFM";
                 sentwp_sms($phone, $msg);
             
             } 
@@ -68,12 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           try {
              $new_pass = chr(rand(ord('A'), ord('Z'))) . chr(rand(ord('a'), ord('z'))) . chr(rand(ord('a'), ord('z'))) . rand(000, 999);
 
+             $new_pass_enc = enc($new_pass);
+
              $sql1 = "UPDATE tab_login SET pass=:pass where mobile=:phone";
               $stmt1 = $PDO_LINK->prepare($sql1);
-              $stmt1->bindParam(':pass', enc($new_pass), PDO::PARAM_STR);
+              $stmt1->bindParam(':pass', $new_pass_enc, PDO::PARAM_STR);
               $stmt1->bindParam(':phone', $phone);
-              if ($stmt0->execute()){
-                $msg = "Hi Sir/mam\n\n\n*Congrats, Your ID and new Password is generated.\n\n ID : " . $phone . ".\n\n Password : " . $new_pass . ".*\n\nThanks. \n\n*Regards PFM*";
+              if ($stmt1->execute()){
+                $msg = "Hi Sir/mam\n\nYour new password has been generated for your mobile.\n\n ID : " . $phone . " Password : " . $new_pass . "\n\nThanks. \n\n*Regards PFM*";
                 sentwp_sms($phone, $msg);
               }            
          

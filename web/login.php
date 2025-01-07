@@ -132,12 +132,15 @@ if (isset($_POST['send-otp-submit'])) {
   /////Find Dupilicate with status 0///
         $sql_dup = "SELECT * FROM tab_user WHERE mobile = :mobile";
         $stmt_dup = $PDO_LINK->prepare($sql_dup);
-        $stmt_dup->bindParam(':mobile', $phone, PDO::PARAM_STR);
+        $stmt_dup->bindParam(':mobile', $mobile, PDO::PARAM_STR);
         $stmt_dup->execute();
 
         // Get the number of rows returned
 
         if ($stmt_dup->rowCount() > 0) {
+          $_SESSION['msg'] = "OTP sent to your mobile";
+          $_SESSION['msg_type'] = "success";
+
           $updated_otp = rand(111111, 999999);
 
           $sql = "update tab_login set otp=:updated_otp where mobile=:mobile";
@@ -151,6 +154,7 @@ if (isset($_POST['send-otp-submit'])) {
           } else {
             echo "<script>alert('error')</script>";
           }
+
 
           header("Location: auth.php?mobile=$mobile&via=forget");
           exit;
@@ -253,7 +257,7 @@ if (isset($_POST['send-otp-submit'])) {
           <input type="text" name="password" placeholder="Password" required />
         </div>
         <input type="hidden" value="" name="otp" />
-        <button class="btn" type="submit" name="signup-submit">Sign up</button>
+        <button class="btn" name="signup-submit">Sign up</button>
 
         <p class="account-text">
           Already have an account? <a href="#" id="sign-in-btn2">Sign in</a>
