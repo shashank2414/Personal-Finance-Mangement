@@ -128,22 +128,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if (isset($_POST['send-otp-submit'])) {
 
   $mobile = sanitizeInput($_POST['mobile']);
-  $updated_otp = rand(111111, 999999);
+  
+  /////Find Dupilicate with status 0///
+        $sql_dup = "SELECT * FROM tab_user WHERE mobile = :mobile";
+        $stmt_dup = $PDO_LINK->prepare($sql_dup);
+        $stmt_dup->bindParam(':mobile', $phone, PDO::PARAM_STR);
+        $stmt_dup->execute();
 
-  $sql = "update tab_login set otp=:updated_otp where mobile=:mobile";
-  $stmt = $PDO_LINK->prepare($sql);
-  $stmt->bindParam(":updated_otp", $updated_otp);
-  $stmt->bindParam(":mobile", $mobile);
+        // Get the number of rows returned
 
-  if ($stmt->execute()) {
-    $msg = "Hi Sir/mam\n\n\n*Your forget password verification otp is : " . $updated_otp . ".*\n\nKindly verify otp to get new password on mobile.\n\nThanks. \n\n*Regards PFM*";
-    sentwp_sms($mobile, $msg);
-  } else {
-    echo "<script>alert('error')</script>";
-  }
+        if ($stmt_dup->rowCount() > 0) {
+          $updated_otp = rand(111111, 999999);
 
-  header("Location: auth.php?mobile=$mobile");
-  exit;
+          $sql = "update tab_login set otp=:updated_otp where mobile=:mobile";
+          $stmt = $PDO_LINK->prepare($sql);
+          $stmt->bindParam(":updated_otp", $updated_otp);
+          $stmt->bindParam(":mobile", $mobile);
+
+          if ($stmt->execute()) {
+            $msg = "Hi Sir/mam\n\n\n*Your forget password verification otp is : " . $updated_otp . ".*\n\nKindly verify otp to get new password on mobile.\n\nThanks. \n\n*Regards PFM*";
+            sentwp_sms($mobile, $msg);
+          } else {
+            echo "<script>alert('error')</script>";
+          }
+
+          header("Location: auth.php?mobile=$mobile&via=forget");
+          exit;
+        }else{
+           $_SESSION['msg'] = "Invalid Credential";
+           $_SESSION['msg_type'] = "error";
+        }
 }
 
 ?>

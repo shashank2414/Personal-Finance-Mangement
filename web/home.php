@@ -8,7 +8,7 @@ require('con_base/functions.inc.php');
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home || PFM</title>
-     <?php require("header_link.php"); ?>
+     <?php require("include/header_link.php"); ?>
   </head>
   <body>
     
@@ -23,7 +23,7 @@ require('con_base/functions.inc.php');
 
      
     
-    <script src="assets/script/app.js"></script>
+    <script src="../assets/script/app.js"></script>
     <?php require("include/js_links.php"); ?>
   </body>
 </html>

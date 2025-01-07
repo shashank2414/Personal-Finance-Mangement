@@ -1,6 +1,12 @@
 <?php
 require('../con_base/functions.inc.php');
 $phone = $_GET['mobile'];
+$via = "";
+
+if(isset($_GET['via'])){
+  $via = $_GET['via'];
+}
+ 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -18,7 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $status = 1;
 
-        try {
+        if($via == "")
+        {
+            try {
 
           $sql0 = "UPDATE tab_user SET status=:status where mobile=:phone";
           $stmt0 = $PDO_LINK->prepare($sql0);
@@ -31,7 +39,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $PDO_LINK->prepare($sql);
             $stmt->bindParam(':status', $status, PDO::PARAM_STR);
             $stmt->bindParam(':phone', $phone);
-            $stmt->execute();
+            if($stmt->execute()){
+
+                $sql1 = "Select pass from tab_login where mobile=:mobile";
+                $stmt1 = $PDO_LINK->prepare($sql1);
+                $stmt1->bindParam(":mobile", $phone, PDO::PARAM_STR);
+                $stmt1->execute();
+                $result = $stmt1->fetch(PDO::FETCH_ASSOC);
+                $pass = dec($result['pass']);
+             
+                $msg = "Hi Sir/mam\n\n*Congrats 💐💐,\n Welcome to Personal Finance Management!! Take control of your finances today for a brighter tomorrow.*\n\n Grab your ID and Password 👇\n\n ID : *" . $phone . "*\n Password : *" . $pass . "*\n\nThanks\nRegards PFM";
+                sentwp_sms($phone, $msg);
+            
+            } 
             $_SESSION['msg'] = "Your UserID and Password has been sent to your mobile";
             $_SESSION['msg_type'] = "success";
             header("location: home.php");
@@ -40,10 +60,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['msg'] = "Error: " . $e->getMessage();
             $_SESSION['msg_type'] = "error";
           }
+         } catch (PDOException $e) {
+          $_SESSION['msg'] = "Error: " . $e->getMessage();
+          $_SESSION['msg_type'] = "error";
+        }
+        }else{
+          try {
+             $new_pass = chr(rand(ord('A'), ord('Z'))) . chr(rand(ord('a'), ord('z'))) . chr(rand(ord('a'), ord('z'))) . rand(000, 999);
+
+             $sql1 = "UPDATE tab_login SET pass=:pass where mobile=:phone";
+              $stmt1 = $PDO_LINK->prepare($sql1);
+              $stmt1->bindParam(':pass', enc($new_pass), PDO::PARAM_STR);
+              $stmt1->bindParam(':phone', $phone);
+              if ($stmt0->execute()){
+                $msg = "Hi Sir/mam\n\n\n*Congrats, Your ID and new Password is generated.\n\n ID : " . $phone . ".\n\n Password : " . $new_pass . ".*\n\nThanks. \n\n*Regards PFM*";
+                sentwp_sms($phone, $msg);
+              }            
+         
+            $_SESSION['msg'] = "Your UserID and Password has been sent to your mobile";
+            $_SESSION['msg_type'] = "success";
+            header("location: home.php");
+            exit;
+           
         } catch (PDOException $e) {
           $_SESSION['msg'] = "Error: " . $e->getMessage();
           $_SESSION['msg_type'] = "error";
         }
+        }
+        
+
+        
       } else {
         $_SESSION['msg'] = "Invalid OTP";
         $_SESSION['msg_type'] = "error";
@@ -92,9 +138,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </form>
 
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  const inputs = document.querySelectorAll(".otp-input input");
 
+  inputs.forEach((input, index) => {
+    input.addEventListener("input", (e) => {
+      if (e.target.value.length === 1 && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && e.target.value === "" && index > 0) {
+        inputs[index - 1].focus();
+      }
+    });
+  });
+});
+</script>
 
-  <script src="assets/script/app.js"></script>
+  <script src="../assets/script/app.js"></script>
 
 
 </body>
